@@ -175,20 +175,20 @@ function drawStartScreen(currentTime) {
   ctx.save();
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = map2(logicalWidth, 375, 1920, 32, 48) + 'px ZCOOL XiaoWei';
+  ctx.font = map2(logicalWidth, 375, 1920, 38, 54) + 'px ZCOOL XiaoWei';
   ctx.shadowColor = 'rgba(0, 0, 0, 0.23)';
   ctx.shadowOffsetX = 2;
   ctx.shadowOffsetY = 2;
   ctx.shadowBlur = 4;
   ctx.fillStyle = `rgb(${deepMorandi[0]}, ${deepMorandi[1]}, ${deepMorandi[2]})`;
-  ctx.fillText("测测你的天气人格", logicalWidth / 2, logicalHeight / 2 - 10);
+  ctx.fillText("测测你的天气人格", logicalWidth / 2, logicalHeight / 2 + 5);
 
-  ctx.font = '16px ZCOOL XiaoWei';
+  ctx.font = '18px ZCOOL XiaoWei';
   ctx.strokeStyle = `rgb(${deepMorandi[0]}, ${deepMorandi[1]}, ${deepMorandi[2]})`;
   ctx.lineWidth = 0.5;
-  ctx.strokeText("探索潜藏在你灵魂深处的气象", logicalWidth / 2, logicalHeight / 2 + 55);
-  ctx.fillText("探索潜藏在你灵魂深处的气象", logicalWidth / 2, logicalHeight / 2 + 55);
-  ctx.fillText("[ 点击屏幕开始 ]", logicalWidth / 2, logicalHeight / 2 + 75);
+  ctx.strokeText("探索潜藏在你灵魂深处的气象", logicalWidth / 2, logicalHeight / 2 + 70);
+  ctx.fillText("探索潜藏在你灵魂深处的气象", logicalWidth / 2, logicalHeight / 2 + 70);
+  ctx.fillText("[ 点击屏幕开始 ]", logicalWidth / 2, logicalHeight / 2 + 95);
   ctx.restore();
 }
 
@@ -304,29 +304,29 @@ function drawResultScreen() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
-  ctx.font = '22px ZCOOL XiaoWei';
+  ctx.font = '26px ZCOOL XiaoWei';
   ctx.fillStyle = `rgba(85, 95, 110, ${fadeAnim * 0.8 / 255})`;
-  ctx.fillText('你的天气人格是', boxX, boxY - boxH * 0.38);
+  ctx.fillText('你的天气人格是', boxX, boxY - boxH * 0.42);
 
   ctx.shadowColor = 'rgba(0, 0, 0, 0.39)';
   ctx.shadowOffsetX = 2;
   ctx.shadowOffsetY = 2;
   ctx.shadowBlur = 6;
   ctx.fillStyle = `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
-  ctx.font = Math.min(logicalWidth * 0.14, 64) + 'px ZCOOL XiaoWei';
-  ctx.fillText(getWeatherName(winner), boxX, boxY - boxH * 0.2);
+  ctx.font = Math.min(logicalWidth * 0.16, 72) + 'px ZCOOL XiaoWei';
+  ctx.fillText(getWeatherName(winner), boxX, boxY - boxH * 0.25);
 
-  ctx.font = '15px ZCOOL XiaoWei';
+  ctx.font = '17px ZCOOL XiaoWei';
   ctx.fillStyle = `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${fadeAnim / 255})`;
-  ctx.fillText(getWeatherSummary(winner), boxX, boxY - boxH * 0.06);
+  ctx.fillText(getWeatherSummary(winner), boxX, boxY - boxH * 0.12);
 
-  drawTraitAnalysis(boxY + boxH * 0.05);
+  drawTraitAnalysis(boxY - boxH * 0.02);
 
-  ctx.font = '14px ZCOOL XiaoWei';
+  ctx.font = '18px ZCOOL XiaoWei';
   ctx.fillStyle = `rgba(100, 110, 125, ${fadeAnim / 255})`;
   ctx.shadowColor = 'transparent';
   ctx.lineWidth = 0;
-  ctx.fillText('— 点击屏幕任意处重新测试 —', boxX, boxY + boxH * 0.44);
+  ctx.fillText('— 点击屏幕任意处重新测试 —', boxX, boxY + boxH * 0.42);
   ctx.restore();
 }
 
