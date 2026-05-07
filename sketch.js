@@ -175,7 +175,7 @@ function drawStartScreen(currentTime) {
   ctx.save();
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = map2(logicalWidth, 375, 1920, 34, 50) + 'px ZCOOL XiaoWei';
+  ctx.font = map2(logicalWidth, 375, 1920, 30, 46) + 'px ZCOOL XiaoWei';
   ctx.shadowColor = 'rgba(0, 0, 0, 0.23)';
   ctx.shadowOffsetX = 2;
   ctx.shadowOffsetY = 2;
@@ -237,7 +237,7 @@ function drawQuizScreen() {
   const btnWidth = Math.min(logicalWidth * 0.85, 420);
   for (let i = 0; i < q.options.length; i++) {
     const x = logicalWidth / 2;
-    const y = logicalHeight * 0.44 + i * 75;
+    const y = logicalHeight * 0.41 + i * 75;
     const isHover = mouseX > x - btnWidth / 2 && mouseX < x + btnWidth / 2 && mouseY > y - 35 && mouseY < y + 35;
 
     ctx.save();
@@ -283,8 +283,8 @@ function drawResultScreen() {
     p.show(winner);
   }
 
-  const boxW = Math.min(logicalWidth * 0.92, 500);
-  const boxH = Math.min(logicalHeight * 0.75, 700);
+  const boxW = Math.min(logicalWidth * 0.96, 540);
+  const boxH = Math.min(logicalHeight * 0.88, 800);
   const boxX = logicalWidth / 2;
   const boxY = logicalHeight * 0.5;
 
@@ -306,7 +306,7 @@ function drawResultScreen() {
 
   ctx.font = '24px ZCOOL XiaoWei';
   ctx.fillStyle = `rgba(85, 95, 110, ${fadeAnim * 0.8 / 255})`;
-  ctx.fillText('你的天气人格是', boxX, boxY - boxH * 0.46);
+  ctx.fillText('你的天气人格是', boxX, boxY - boxH * 0.42);
 
   ctx.shadowColor = 'rgba(0, 0, 0, 0.39)';
   ctx.shadowOffsetX = 2;
@@ -314,13 +314,13 @@ function drawResultScreen() {
   ctx.shadowBlur = 6;
   ctx.fillStyle = `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
   ctx.font = Math.min(logicalWidth * 0.15, 68) + 'px ZCOOL XiaoWei';
-  ctx.fillText(getWeatherName(winner), boxX, boxY - boxH * 0.33);
+  ctx.fillText(getWeatherName(winner), boxX, boxY - boxH * 0.29);
 
   ctx.font = '16px ZCOOL XiaoWei';
   ctx.fillStyle = `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${fadeAnim / 255})`;
-  ctx.fillText(getWeatherSummary(winner), boxX, boxY - boxH * 0.20);
+  ctx.fillText(getWeatherSummary(winner), boxX, boxY - boxH * 0.16);
 
-  drawTraitAnalysis(boxY - boxH * 0.08);
+  drawTraitAnalysis(boxY - boxH * 0.04);
 
   ctx.font = '16px ZCOOL XiaoWei';
   ctx.fillStyle = `rgba(100, 110, 125, ${fadeAnim / 255})`;
@@ -444,7 +444,7 @@ function handleInteraction() {
     const q = currentQuizSet[currentQ];
     
     for (let i = 0; i < q.options.length; i++) {
-      const y = logicalHeight * 0.44 + i * 75;
+      const y = logicalHeight * 0.41 + i * 75;
       if (mouseY > y - 35 && mouseY < y + 35 && mouseX > logicalWidth / 2 - btnWidth / 2 && mouseX < logicalWidth / 2 + btnWidth / 2) {
         handleSelect(q.options[i].tag);
         return;
