@@ -183,12 +183,12 @@ function drawStartScreen(currentTime) {
   ctx.fillStyle = `rgb(${deepMorandi[0]}, ${deepMorandi[1]}, ${deepMorandi[2]})`;
   ctx.fillText("测测你的天气人格", logicalWidth / 2, logicalHeight / 2 + 5);
 
-  ctx.font = '18px ZCOOL XiaoWei';
+  ctx.font = '15px ZCOOL XiaoWei';
   ctx.strokeStyle = `rgb(${deepMorandi[0]}, ${deepMorandi[1]}, ${deepMorandi[2]})`;
   ctx.lineWidth = 0.5;
-  ctx.strokeText("探索潜藏在你灵魂深处的气象", logicalWidth / 2, logicalHeight / 2 + 70);
-  ctx.fillText("探索潜藏在你灵魂深处的气象", logicalWidth / 2, logicalHeight / 2 + 70);
-  ctx.fillText("[ 点击屏幕开始 ]", logicalWidth / 2, logicalHeight / 2 + 95);
+  ctx.strokeText("探索潜藏在你灵魂深处的气象", logicalWidth / 2, logicalHeight / 2 + 55);
+  ctx.fillText("探索潜藏在你灵魂深处的气象", logicalWidth / 2, logicalHeight / 2 + 55);
+  ctx.fillText("[ 点击屏幕开始 ]", logicalWidth / 2, logicalHeight / 2 + 80);
   ctx.restore();
 }
 
