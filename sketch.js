@@ -15,6 +15,9 @@ let answerHistory = [];
 let winner = "";
 let scores = { Light: 0, Fire: 0, Mist: 0, Cold: 0, Glow: 0, DarkFire: 0 };
 
+let logicalWidth = window.innerWidth;
+let logicalHeight = window.innerHeight;
+
 const currentQuizSet = [
   { title: "当清晨的第一缕光穿过窗帘，你通常：", options: [ { text: "立刻起身，计划一整天的清单", tag: "Light" }, { text: "思考今天是否会有一场惊喜", tag: "Fire" }, { text: "在半梦半醒间感受光影的移动", tag: "Glow" }, { text: "拉紧被子，享受片刻的孤独", tag: "Cold" } ] },
   { title: "在陌生的城市迷路了，你的第一反应是：", options: [ { text: "打开地图，冷静寻找逻辑路径", tag: "Light" }, { text: "感到一丝莫名的兴奋与挑战欲", tag: "Fire" }, { text: "顺着直觉，寻找感觉舒适的方向", tag: "Glow" }, { text: "随遇而安，欣赏未预见的风景", tag: "Mist" } ] },
@@ -91,8 +94,20 @@ function setup() {
 }
 
 function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  const dpr = window.devicePixelRatio || 1;
+  logicalWidth = window.innerWidth;
+  logicalHeight = window.innerHeight;
+
+  if (dpr > 1) {
+    canvas.width = logicalWidth * dpr;
+    canvas.height = logicalHeight * dpr;
+    canvas.style.width = logicalWidth + 'px';
+    canvas.style.height = logicalHeight + 'px';
+    ctx.scale(dpr, dpr);
+  } else {
+    canvas.width = logicalWidth;
+    canvas.height = logicalHeight;
+  }
 }
 
 function draw() {
@@ -100,7 +115,7 @@ function draw() {
   const currentTime = Date.now() - startTime;
 
   ctx.fillStyle = '#1a1a2e';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, logicalWidth, logicalHeight);
 
   const lerpSpeed = (state === "QUIZ") ? 0.3 : 0.15;
   fadeAnim = lerp(fadeAnim, 255, lerpSpeed);
@@ -146,33 +161,34 @@ function drawStartScreen(currentTime) {
 
   if (cloudImg) {
     ctx.save();
-    const cw = map2(canvas.width, 375, 1920, canvas.width * 0.85, canvas.width * 0.45);
+    const cw = map2(logicalWidth, 375, 1920, logicalWidth * 1.1, logicalWidth * 0.5);
+    const ch = cw * (cloudImg.height / cloudImg.width);
     ctx.shadowColor = `rgba(${deepMorandi[0]}, ${deepMorandi[1]}, ${deepMorandi[2]}, 0.4)`;
     ctx.shadowOffsetX = 6;
     ctx.shadowOffsetY = 6;
     ctx.shadowBlur = 15;
     ctx.globalAlpha = 0.82;
-    ctx.drawImage(cloudImg, canvas.width / 2 - cw / 2, canvas.height / 2 - cw * (cloudImg.height / cloudImg.width) / 2, cw, cw * (cloudImg.height / cloudImg.width));
+    ctx.drawImage(cloudImg, logicalWidth / 2 - cw / 2, logicalHeight / 2 - ch * 0.4, cw, ch);
     ctx.restore();
   }
 
   ctx.save();
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = map2(canvas.width, 375, 1920, 32, 48) + 'px ZCOOL XiaoWei';
+  ctx.font = map2(logicalWidth, 375, 1920, 32, 48) + 'px ZCOOL XiaoWei';
   ctx.shadowColor = 'rgba(0, 0, 0, 0.23)';
   ctx.shadowOffsetX = 2;
   ctx.shadowOffsetY = 2;
   ctx.shadowBlur = 4;
   ctx.fillStyle = `rgb(${deepMorandi[0]}, ${deepMorandi[1]}, ${deepMorandi[2]})`;
-  ctx.fillText("测测你的天气人格", canvas.width / 2, canvas.height / 2 - 10);
+  ctx.fillText("测测你的天气人格", logicalWidth / 2, logicalHeight / 2 - 10);
 
   ctx.font = '16px ZCOOL XiaoWei';
   ctx.strokeStyle = `rgb(${deepMorandi[0]}, ${deepMorandi[1]}, ${deepMorandi[2]})`;
   ctx.lineWidth = 0.5;
-  ctx.strokeText("探索潜藏在你灵魂深处的气象", canvas.width / 2, canvas.height / 2 + 55);
-  ctx.fillText("探索潜藏在你灵魂深处的气象", canvas.width / 2, canvas.height / 2 + 55);
-  ctx.fillText("[ 点击屏幕开始 ]", canvas.width / 2, canvas.height / 2 + 75);
+  ctx.strokeText("探索潜藏在你灵魂深处的气象", logicalWidth / 2, logicalHeight / 2 + 55);
+  ctx.fillText("探索潜藏在你灵魂深处的气象", logicalWidth / 2, logicalHeight / 2 + 55);
+  ctx.fillText("[ 点击屏幕开始 ]", logicalWidth / 2, logicalHeight / 2 + 75);
   ctx.restore();
 }
 
@@ -187,9 +203,9 @@ function drawQuizScreen() {
   const q = currentQuizSet[currentQ];
   if (!q) return;
 
-  const barWidth = Math.min(canvas.width * 0.6, 400);
-  const barX = canvas.width / 2;
-  const barY = canvas.height * 0.12;
+  const barWidth = Math.min(logicalWidth * 0.6, 400);
+  const barX = logicalWidth / 2;
+  const barY = logicalHeight * 0.12;
 
   ctx.save();
   ctx.textAlign = 'center';
@@ -213,15 +229,15 @@ function drawQuizScreen() {
   ctx.save();
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  const titleSize = map2(canvas.width, 375, 1920, 22, 30);
+  const titleSize = map2(logicalWidth, 375, 1920, 22, 30);
   ctx.font = titleSize + 'px ZCOOL XiaoWei';
   ctx.fillStyle = `rgba(255, 255, 255, ${fadeAnim / 255})`;
-  drawWrappedText(q.title, canvas.width / 2, canvas.height * 0.22, Math.min(canvas.width * 0.85, 650), titleSize * 1.3);
+  drawWrappedText(q.title, logicalWidth / 2, logicalHeight * 0.22, Math.min(logicalWidth * 0.85, 650), titleSize * 1.3);
 
-  const btnWidth = Math.min(canvas.width * 0.85, 420);
+  const btnWidth = Math.min(logicalWidth * 0.85, 420);
   for (let i = 0; i < q.options.length; i++) {
-    const x = canvas.width / 2;
-    const y = canvas.height * 0.45 + i * 85;
+    const x = logicalWidth / 2;
+    const y = logicalHeight * 0.45 + i * 85;
     const isHover = mouseX > x - btnWidth / 2 && mouseX < x + btnWidth / 2 && mouseY > y - 25 && mouseY < y + 25;
 
     ctx.save();
@@ -246,7 +262,7 @@ function drawQuizScreen() {
     ctx.textBaseline = 'middle';
     ctx.font = '12px ZCOOL XiaoWei';
     ctx.fillStyle = 'rgba(255, 255, 255, 0.47)';
-    ctx.fillText('← 返回上一题', canvas.width / 2, canvas.height * 0.92);
+    ctx.fillText('← 返回上一题', logicalWidth / 2, logicalHeight * 0.92);
     ctx.restore();
   }
   ctx.restore();
@@ -267,8 +283,10 @@ function drawResultScreen() {
     p.show(winner);
   }
 
-  const boxW = Math.min(canvas.width * 0.92, 500);
-  const boxH = Math.min(canvas.height * 0.75, 700);
+  const boxW = Math.min(logicalWidth * 0.92, 500);
+  const boxH = Math.min(logicalHeight * 0.75, 700);
+  const boxX = logicalWidth / 2;
+  const boxY = logicalHeight * 0.5;
 
   ctx.save();
   ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
@@ -276,7 +294,8 @@ function drawResultScreen() {
   ctx.shadowOffsetX = 0;
   ctx.shadowOffsetY = 10;
   ctx.shadowBlur = 20;
-  roundRect(canvas.width / 2, canvas.height * 0.5, boxW, boxH, 20);
+  ctx.lineWidth = 0;
+  roundRect(boxX, boxY, boxW, boxH, 20, true, true);
   ctx.restore();
 
   const c = colors[winner] || colors.default;
@@ -284,30 +303,30 @@ function drawResultScreen() {
   ctx.save();
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
+
   ctx.font = '22px ZCOOL XiaoWei';
   ctx.fillStyle = `rgba(85, 95, 110, ${fadeAnim * 0.8 / 255})`;
-  ctx.fillText('你的天气人格是', canvas.width / 2, canvas.height * 0.22);
+  ctx.fillText('你的天气人格是', boxX, boxY - boxH * 0.38);
 
   ctx.shadowColor = 'rgba(0, 0, 0, 0.39)';
   ctx.shadowOffsetX = 2;
   ctx.shadowOffsetY = 2;
   ctx.shadowBlur = 6;
   ctx.fillStyle = `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
-  ctx.font = Math.min(canvas.width * 0.16, 76) + 'px ZCOOL XiaoWei';
-  ctx.fillText(getWeatherName(winner), canvas.width / 2, canvas.height * 0.34);
+  ctx.font = Math.min(logicalWidth * 0.14, 64) + 'px ZCOOL XiaoWei';
+  ctx.fillText(getWeatherName(winner), boxX, boxY - boxH * 0.2);
 
-  ctx.font = '16px ZCOOL XiaoWei';
+  ctx.font = '15px ZCOOL XiaoWei';
   ctx.fillStyle = `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${fadeAnim / 255})`;
-  ctx.fillText(getWeatherSummary(winner), canvas.width / 2, canvas.height * 0.42);
+  ctx.fillText(getWeatherSummary(winner), boxX, boxY - boxH * 0.06);
 
-  drawTraitAnalysis(canvas.height * 0.55);
+  drawTraitAnalysis(boxY + boxH * 0.05);
 
-  ctx.font = '16px ZCOOL XiaoWei';
-  ctx.fillStyle = `rgba(255, 255, 255, ${fadeAnim / 255})`;
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-  ctx.lineWidth = 1;
-  ctx.strokeText('— 点击屏幕任意处重新测试 —', canvas.width / 2, canvas.height * 0.9);
-  ctx.fillText('— 点击屏幕任意处重新测试 —', canvas.width / 2, canvas.height * 0.9);
+  ctx.font = '14px ZCOOL XiaoWei';
+  ctx.fillStyle = `rgba(100, 110, 125, ${fadeAnim / 255})`;
+  ctx.shadowColor = 'transparent';
+  ctx.lineWidth = 0;
+  ctx.fillText('— 点击屏幕任意处重新测试 —', boxX, boxY + boxH * 0.44);
   ctx.restore();
 }
 
@@ -317,8 +336,8 @@ function drawTraitAnalysis(yAnchor) {
     { name: '冷静·阴天', key: 'Mist' }, { name: '纯粹·初雪', key: 'Cold' },
     { name: '温柔·晚霞', key: 'Glow' }, { name: '深沉·雷暴', key: 'DarkFire' }
   ];
-  const barMaxW = Math.min(canvas.width * 0.7, 450);
-  const startX = canvas.width / 2 - barMaxW / 2;
+  const barMaxW = Math.min(logicalWidth * 0.7, 450);
+  const startX = logicalWidth / 2 - barMaxW / 2;
 
   for (let i = 0; i < traits.length; i++) {
     const t = traits[i];
@@ -334,11 +353,11 @@ function drawTraitAnalysis(yAnchor) {
     ctx.fillText(t.name, startX, y);
 
     ctx.fillStyle = 'rgba(180, 185, 195, 0.31)';
-    roundRect(startX + 90, y - 4, barMaxW - 90, 8, 4);
+    roundRect(startX + 90, y - 4, barMaxW - 90, 8, 4, false, true);
 
     const tc = colors[t.key];
     ctx.fillStyle = `rgba(${tc[0]}, ${tc[1]}, ${tc[2]}, ${fadeAnim / 255})`;
-    roundRect(startX + 90, y - 4, targetW, 8, 4);
+    roundRect(startX + 90, y - 4, targetW, 8, 4, false, true);
     ctx.restore();
   }
 }
@@ -346,13 +365,13 @@ function drawTraitAnalysis(yAnchor) {
 function drawCoverImage(img, alpha) {
   if (!img) return;
   const r = img.width / img.height;
-  const cr = canvas.width / canvas.height;
+  const cr = logicalWidth / logicalHeight;
   let dw, dh;
-  if (cr > r) { dw = canvas.width; dh = canvas.width / r; }
-  else { dw = canvas.height * r; dh = canvas.height; }
+  if (cr > r) { dw = logicalWidth; dh = logicalWidth / r; }
+  else { dw = logicalHeight * r; dh = logicalHeight; }
   ctx.save();
   ctx.globalAlpha = alpha / 255;
-  ctx.drawImage(img, canvas.width / 2 - dw / 2, canvas.height / 2 - dh / 2, dw, dh);
+  ctx.drawImage(img, logicalWidth / 2 - dw / 2, logicalHeight / 2 - dh / 2, dw, dh);
   ctx.restore();
 }
 
@@ -376,7 +395,7 @@ function drawWrappedText(text, x, y, maxWidth, lineHeight) {
   ctx.fillText(currentLine, x, textY);
 }
 
-function roundRect(x, y, w, h, r, center) {
+function roundRect(x, y, w, h, r, center, noStroke) {
   ctx.beginPath();
   if (center) {
     x -= w / 2;
@@ -393,7 +412,7 @@ function roundRect(x, y, w, h, r, center) {
   ctx.quadraticCurveTo(x, y, x + r, y);
   ctx.closePath();
   ctx.fill();
-  if (ctx.lineWidth > 0) ctx.stroke();
+  if (!noStroke && ctx.lineWidth > 0) ctx.stroke();
 }
 
 function map2(value, start1, stop1, start2, stop2) {
@@ -421,18 +440,18 @@ function handleInteraction() {
   if (state === 'START') {
     changeState('QUIZ');
   } else if (state === 'QUIZ') {
-    const btnWidth = Math.min(canvas.width * 0.85, 420);
+    const btnWidth = Math.min(logicalWidth * 0.85, 420);
     const q = currentQuizSet[currentQ];
     
     for (let i = 0; i < q.options.length; i++) {
-      const y = canvas.height * 0.45 + i * 85;
-      if (mouseY > y - 25 && mouseY < y + 25 && mouseX > canvas.width / 2 - btnWidth / 2 && mouseX < canvas.width / 2 + btnWidth / 2) {
+      const y = logicalHeight * 0.45 + i * 85;
+      if (mouseY > y - 25 && mouseY < y + 25 && mouseX > logicalWidth / 2 - btnWidth / 2 && mouseX < logicalWidth / 2 + btnWidth / 2) {
         handleSelect(q.options[i].tag);
         return;
       }
     }
     
-    if (currentQ > 0 && mouseY > canvas.height * 0.88) goBack();
+    if (currentQ > 0 && mouseY > logicalHeight * 0.88) goBack();
   } else if (state === 'RESULT') {
     resetQuiz();
     changeState('START');
@@ -508,8 +527,8 @@ class ResultParticle {
   }
 
   reset() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
+    this.x = Math.random() * logicalWidth;
+    this.y = Math.random() * logicalHeight;
     this.vx = Math.random() - 0.5;
     this.vy = Math.random() * 2 + 1;
     this.size = Math.random() * 3 + 2;
@@ -529,10 +548,10 @@ class ResultParticle {
     }
     this.x += this.vx;
     this.y += this.vy;
-    if (this.y > canvas.height) this.y = -10;
-    if (this.y < -10) this.y = canvas.height;
-    if (this.x > canvas.width) this.x = 0;
-    if (this.x < 0) this.x = canvas.width;
+    if (this.y > logicalHeight) this.y = -10;
+    if (this.y < -10) this.y = logicalHeight;
+    if (this.x > logicalWidth) this.x = 0;
+    if (this.x < 0) this.x = logicalWidth;
   }
 
   show(type) {
